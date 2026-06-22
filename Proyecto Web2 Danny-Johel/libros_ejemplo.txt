@@ -1,0 +1,49 @@
+Clean Code
+   Autor: Robert C. Martin
+   ISBN: 9780132350884
+   Categoria: SOFTWARE
+
+Don Quijote de la Mancha
+   Autor: Miguel de Cervantes
+   ISBN: 9788491050297
+   Categoria: NOVELA
+
+Dracula
+   Autor: Bram Stoker
+   ISBN: 9780486411095
+   Categoria: TERROR
+
+Hamlet
+   Autor: William Shakespeare
+   ISBN: 9780743477123
+   Categoria: DRAMA
+
+Dune
+   Autor: Frank Herbert
+   ISBN: 9780441172719
+   Categoria: CIENCIA_FICCION
+
+The Hobbit
+   Autor: J. R. R. Tolkien
+   ISBN: 9780547928227
+   Categoria: FANTASIA
+
+Sapiens
+   Autor: Yuval Noah Harari
+   ISBN: 9780062316097
+   Categoria: HISTORIA
+
+Steve Jobs
+   Autor: Walter Isaacson
+   ISBN: 9781451648539
+   Categoria: BIOGRAFIA
+
+Veinte poemas de amor y una cancion desesperada
+   Autor: Pablo Neruda
+   ISBN: 9788497592722
+   Categoria: POESIA
+
+El principito
+   Autor: Antoine de Saint-Exupery
+   ISBN: 9780156012195
+   Categoria: INFANTIL

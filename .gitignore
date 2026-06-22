@@ -1,0 +1,10 @@
+.DS_Store
+.idea/
+
+# Build output
+target/
+*/target/
+*.class
+
+# Documentation files
+*.md
