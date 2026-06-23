@@ -1,9 +1,20 @@
 package web2.tec.proyectoweb2dannyjohel.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +33,9 @@ public class Prestamo {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @NotEmpty(message = "Debe existir al menos una linea de prestamo") // validamos que la lista no este vacia, ya que LP contiene 1 o varios prestamos
+    @NotEmpty(message = "Debe existir al menos una linea de prestamo") // validamos que la lista no este vacia, ya que Prestamo contiene 1 o varias LP
     @OneToMany(mappedBy = "prestamo") // mapped indica que la relacion la maneja el campo "prestamo" dentro LP
-    private List<LineaPrestamo> lineaPrestamo = new ArrayList<>();
+    private List<LineaPrestamo> lineasPrestamo = new ArrayList<>();
 
     @NotNull(message = "La fecha de prestamo es obligatoria")
     @Column(nullable = false)
@@ -40,5 +51,4 @@ public class Prestamo {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private EstadoPrestamo estado;
-
 }

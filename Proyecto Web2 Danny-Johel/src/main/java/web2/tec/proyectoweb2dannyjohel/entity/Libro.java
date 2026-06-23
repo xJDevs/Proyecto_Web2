@@ -1,6 +1,13 @@
 package web2.tec.proyectoweb2dannyjohel.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +31,7 @@ public class Libro {
     private String autor;
 
     @NotBlank(message = "El ISBN es obligatorio")
-    @Column(nullable = false, unique = true,length = 13)
+    @Column(nullable = false, unique = true, length = 13)
     private String isbn;
 
     @NotNull(message = "La categoria es obligatoria")
