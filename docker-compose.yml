@@ -1,0 +1,35 @@
+# Nombre del proyecto que Docker Compose muestra en Docker Desktop
+name: biblioteca_db
+
+services:
+  # indicammos que es servicio de SQL
+  mysql:
+    # Version de MySQL que se descarga y ejecuta dentro del contenedor
+    image: mysql:8.4
+
+    # Nombre fijo del contenedor para identificarlo facilmente
+    container_name: biblioteca_mysql
+
+    environment:
+      # Base de datos creada automaticamente al iniciar el contenedor
+      MYSQL_DATABASE: biblioteca_db
+
+      MYSQL_USER: biblioteca
+      MYSQL_PASSWORD: biblioteca123
+
+      MYSQL_ROOT_PASSWORD: root123
+
+    ports:
+      # Expone MySQL en la maquina local: localhost:3306.
+      - "3306:3306"
+
+    volumes:
+      # Guarda los datos de MySQL para que no se pierdan al apagar el contenedor.
+      - biblioteca_mysql_data:/var/lib/mysql
+
+      # Ejecuta datos iniciales la primera vez que se crea la base del contenedor.
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  # Volumen persistente administrado por Docker con config default
+  biblioteca_mysql_data:
