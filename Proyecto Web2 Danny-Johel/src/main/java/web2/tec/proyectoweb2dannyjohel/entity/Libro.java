@@ -48,5 +48,6 @@ public class Libro {
     private int cantidadDisponible;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private boolean activo = true; // se usara para determinar si un libro esta disponible para prestamo o no,
+    // si se elimina de la db, se desactiva y no se muestra en la lista de libros disponibles, pero queda en historial
 }
