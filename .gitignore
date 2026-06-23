@@ -2,6 +2,7 @@
 .idea/
 
 # Build output
+out/
 target/
 */target/
 *.class
