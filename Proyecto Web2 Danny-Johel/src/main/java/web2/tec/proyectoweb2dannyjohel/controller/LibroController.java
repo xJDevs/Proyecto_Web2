@@ -1,0 +1,126 @@
+package web2.tec.proyectoweb2dannyjohel.controller;
+
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import web2.tec.proyectoweb2dannyjohel.entity.Categoria;
+import web2.tec.proyectoweb2dannyjohel.entity.Libro;
+import web2.tec.proyectoweb2dannyjohel.entity.Rol;
+import web2.tec.proyectoweb2dannyjohel.entity.Usuario;
+import web2.tec.proyectoweb2dannyjohel.service.LibroService;
+
+@Controller
+@RequestMapping("/libro")
+public class LibroController {
+
+    private final LibroService libroService;
+
+    public LibroController(LibroService libroService) {
+        this.libroService = libroService;
+    }
+
+    // Catalogo visible para todos los usuarios autenticados
+    @GetMapping("/catalogo")
+    public String catalogo(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioActual") == null) {
+            return "redirect:/usuario/login";
+        }
+        model.addAttribute("libros", libroService.listarCatalogo());
+        model.addAttribute("categorias", Categoria.values());
+        return "libro/catalogo";
+    }
+
+    // Formulario para crear libro - solo admin
+    @GetMapping("/nuevo")
+    public String mostrarFormularioNuevo(Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/libro/catalogo";
+        }
+        model.addAttribute("libro", new Libro());
+        model.addAttribute("categorias", Categoria.values());
+        return "libro/formulario";
+    }
+
+    // Procesa la creacion de un libro - solo admin
+    @PostMapping("/nuevo")
+    public String crear(@ModelAttribute Libro libro,
+                        HttpSession session,
+                        RedirectAttributes redirectAttributes) {
+        if (!esAdmin(session)) {
+            return "redirect:/libro/catalogo";
+        }
+        try {
+            libroService.crear(libro);
+            redirectAttributes.addFlashAttribute("mensaje", "Libro creado exitosamente");
+            return "redirect:/libro/catalogo";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/libro/nuevo";
+        }
+    }
+
+    // Formulario para editar libro - solo admin
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable Long id,
+                                          Model model,
+                                          HttpSession session,
+                                          RedirectAttributes redirectAttributes) {
+        if (!esAdmin(session)) {
+            return "redirect:/libro/catalogo";
+        }
+        return libroService.buscarPorId(id)
+                .map(libro -> {
+                    model.addAttribute("libro", libro);
+                    model.addAttribute("categorias", Categoria.values());
+                    return "libro/formulario";
+                })
+                .orElseGet(() -> {
+                    redirectAttributes.addFlashAttribute("error", "Libro no encontrado");
+                    return "redirect:/libro/catalogo";
+                });
+    }
+
+    // Procesa la edicion de un libro - solo admin
+    @PostMapping("/editar/{id}")
+    public String editar(@PathVariable Long id,
+                         @ModelAttribute Libro libro,
+                         HttpSession session,
+                         RedirectAttributes redirectAttributes) {
+        if (!esAdmin(session)) {
+            return "redirect:/libro/catalogo";
+        }
+        try {
+            libroService.editar(id, libro);
+            redirectAttributes.addFlashAttribute("mensaje", "Libro actualizado exitosamente");
+            return "redirect:/libro/catalogo";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/libro/catalogo";
+        }
+    }
+
+    // Desactiva un libro - solo admin
+    @PostMapping("/desactivar/{id}")
+    public String desactivar(@PathVariable Long id,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+        if (!esAdmin(session)) {
+            return "redirect:/libro/catalogo";
+        }
+        try {
+            libroService.desactivar(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Libro desactivado exitosamente");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/libro/catalogo";
+    }
+
+    // Metodo auxiliar para verificar si el usuario en sesion es administrador
+    private boolean esAdmin(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActual");
+        return usuario != null && usuario.getRol() == Rol.ADMINISTRADOR;
+    }
+}
