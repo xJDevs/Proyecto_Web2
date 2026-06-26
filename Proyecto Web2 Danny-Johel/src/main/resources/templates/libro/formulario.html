@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Libro</title>
+</head>
+<body>
+
+<h2 th:text="${libro.id != null} ? 'Editar Libro' : 'Nuevo Libro'"></h2>
+
+<div th:if="${error}" style="color:red">
+    <p th:text="${error}"></p>
+</div>
+
+<form th:action="${libro.id != null} ? @{/libro/editar/{id}(id=${libro.id})} : @{/libro/nuevo}"
+      method="post">
+
+    <label>Titulo:</label>
+    <input type="text" name="titulo" th:value="${libro.titulo}" required/><br/>
+
+    <label>Autor:</label>
+    <input type="text" name="autor" th:value="${libro.autor}" required/><br/>
+
+    <label>ISBN:</label>
+    <input type="text" name="isbn" th:value="${libro.isbn}" required/><br/>
+
+    <label>Categoria:</label>
+    <select name="categoria">
+        <option th:each="cat : ${categorias}"
+                th:value="${cat}"
+                th:text="${cat}"
+                th:selected="${cat == libro.categoria}">
+        </option>
+    </select><br/>
+
+    <label>Cantidad Total:</label>
+    <input type="number" name="cantidadTotal" th:value="${libro.cantidadTotal}" min="1" required/><br/>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<a href="/libro/catalogo">Volver al catalogo</a>
+
+</body>
+</html>

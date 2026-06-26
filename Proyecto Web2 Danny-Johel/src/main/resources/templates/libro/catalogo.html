@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalogo de Libros</title>
+</head>
+<body>
+
+<h2>Catalogo de Libros</h2>
+
+<div th:if="${mensaje}" style="color:green">
+    <p th:text="${mensaje}"></p>
+</div>
+<div th:if="${error}" style="color:red">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- Opciones de administrador -->
+<div th:if="${session.rol == 'ADMINISTRADOR'}">
+    <a href="/libro/nuevo">Agregar nuevo libro</a>
+</div>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Titulo</th>
+        <th>Autor</th>
+        <th>ISBN</th>
+        <th>Categoria</th>
+        <th>Disponibles</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="libro : ${libros}">
+        <td th:text="${libro.titulo}"></td>
+        <td th:text="${libro.autor}"></td>
+        <td th:text="${libro.isbn}"></td>
+        <td th:text="${libro.categoria}"></td>
+        <td th:text="${libro.cantidadDisponible}"></td>
+        <td>
+            <!-- Solo admin ve editar y desactivar -->
+            <div th:if="${session.rol == 'ADMINISTRADOR'}">
+                <a th:href="@{/libro/editar/{id}(id=${libro.id})}">Editar</a>
+                <form th:action="@{/libro/desactivar/{id}(id=${libro.id})}" method="post">
+                    <button type="submit">Desactivar</button>
+                </form>
+            </div>
+            <!-- Usuario regular puede solicitar prestamo -->
+            <div th:if="${session.rol == 'USUARIO'}">
+                <a th:href="@{/prestamo/nuevo}">Solicitar prestamo</a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/usuario/logout">Cerrar sesion</a>
+
+</body>
+</html>

@@ -18,13 +18,13 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    // Muestra el formulario de registro
+    // Muestra el formulario de registro.html
     @GetMapping("/registro")
     public String mostrarRegistro() {
-        return "usuario/registro";
+        return "usuario/registro.html";
     }
 
-    // Procesa el formulario de registro
+    // Procesa el formulario de registro.html
     @PostMapping("/registro")
     public String registrar(@RequestParam String nombre,
                             @RequestParam String correo,

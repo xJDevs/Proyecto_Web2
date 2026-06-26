@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Historial</title>
+</head>
+<body>
+
+<h2>Mi Historial de Prestamos</h2>
+
+<div th:if="${mensaje}" style="color:green">
+    <p th:text="${mensaje}"></p>
+</div>
+<div th:if="${error}" style="color:red">
+    <p th:text="${error}"></p>
+</div>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Libro</th>
+        <th>Fecha Prestamo</th>
+        <th>Fecha Devolucion Esperada</th>
+        <th>Fecha Devolucion Real</th>
+        <th>Estado</th>
+        <th>Accion</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="prestamo : ${prestamos}">
+        <td th:text="${prestamo.libro.titulo}"></td>
+        <td th:text="${prestamo.fechaPrestamo}"></td>
+        <td th:text="${prestamo.fechaDevolucionEsperada}"></td>
+        <td th:text="${prestamo.fechaDevolucionReal != null} ? ${prestamo.fechaDevolucionReal} : 'Pendiente'"></td>
+        <td th:text="${prestamo.estado}"></td>
+        <td>
+            <form th:if="${prestamo.estado.name() == 'ACTIVO'}"
+                  th:action="@{/prestamo/devolver/{id}(id=${prestamo.id})}"
+                  method="post">
+                <button type="submit">Devolver</button>
+            </form>
+            <span th:if="${prestamo.estado.name() != 'ACTIVO'}">Devuelto</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/libro/catalogo">Volver al catalogo</a>
+
+</body>
+</html>

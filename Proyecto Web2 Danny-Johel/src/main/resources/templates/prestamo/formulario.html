@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitar Prestamo</title>
+</head>
+<body>
+
+<h2>Solicitar Prestamo</h2>
+
+<div th:if="${error}" style="color:red">
+    <p th:text="${error}"></p>
+</div>
+
+<form action="/prestamo/nuevo" method="post">
+
+    <label>Libro:</label>
+    <select name="libroId" required>
+        <option th:each="libro : ${libros}"
+                th:value="${libro.id}"
+                th:text="${libro.titulo} + ' - ' + ${libro.autor} + ' (' + ${libro.cantidadDisponible} + ' disponibles)'">
+        </option>
+    </select><br/>
+
+    <label>Fecha de devolucion esperada:</label>
+    <input type="date" name="fechaDevolucionEsperada" required/><br/>
+
+    <button type="submit">Solicitar</button>
+</form>
+
+<a href="/libro/catalogo">Volver al catalogo</a>
+
+</body>
+</html>
