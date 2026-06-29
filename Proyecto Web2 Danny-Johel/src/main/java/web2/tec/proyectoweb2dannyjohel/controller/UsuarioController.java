@@ -1,7 +1,9 @@
 package web2.tec.proyectoweb2dannyjohel.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -20,18 +22,24 @@ public class UsuarioController {
 
     // Muestra el formulario de registro.html
     @GetMapping("/registro")
-    public String mostrarRegistro() {
+    public String mostrarRegistro(Model model) {
+        // Objeto base que Thymeleaf llena con los datos escritos en el formulario
+        model.addAttribute("usuario", new Usuario());
         return "usuario/registro.html";
     }
 
     // Procesa el formulario de registro.html
     @PostMapping("/registro")
-    public String registrar(@RequestParam("nombre") String nombre,
-                            @RequestParam("correo") String correo,
-                            @RequestParam("password") String password,
+    public String registrar(@Valid @ModelAttribute Usuario usuario,
+                            BindingResult bindingResult,
                             RedirectAttributes redirectAttributes) {
+        // Si falla nombre, correo o contrasena, se vuelve al formulario sin crear la cuenta
+        if (bindingResult.hasErrors()) {
+            return "usuario/registro";
+        }
+
         try {
-            usuarioService.registrar(nombre, correo, password);
+            usuarioService.registrar(usuario.getNombre(), usuario.getCorreo(), usuario.getPassword());
             redirectAttributes.addFlashAttribute("mensaje", "Registro exitoso, inicia sesion");
             return "redirect:/usuario/login";
         } catch (IllegalArgumentException e) {

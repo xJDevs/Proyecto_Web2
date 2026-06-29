@@ -12,15 +12,18 @@
     <p th:text="${error}"></p>
 </div>
 
-<form action="/usuario/registro" method="post">
+<form th:action="@{/usuario/registro}" th:object="${usuario}" method="post">
     <label>Nombre:</label>
-    <input type="text" name="nombre" required/><br/>
+    <input type="text" th:field="*{nombre}" required/><br/>
+    <small th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></small><br/>
 
     <label>Correo:</label>
-    <input type="email" name="correo" required/><br/>
+    <input type="email" th:field="*{correo}" required/><br/>
+    <small th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}" style="color:red"></small><br/>
 
     <label>Contrasena:</label>
-    <input type="password" name="password" required/><br/>
+    <input type="password" th:field="*{password}" required/><br/>
+    <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></small><br/>
 
     <button type="submit">Registrarse</button>
 </form>
