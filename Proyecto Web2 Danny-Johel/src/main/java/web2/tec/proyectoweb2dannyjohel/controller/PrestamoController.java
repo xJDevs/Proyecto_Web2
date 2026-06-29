@@ -9,6 +9,7 @@ import web2.tec.proyectoweb2dannyjohel.entity.Rol;
 import web2.tec.proyectoweb2dannyjohel.entity.Usuario;
 import web2.tec.proyectoweb2dannyjohel.service.LibroService;
 import web2.tec.proyectoweb2dannyjohel.service.PrestamoService;
+import web2.tec.proyectoweb2dannyjohel.entity.Prestamo;
 
 import java.time.LocalDate;
 
@@ -94,12 +95,24 @@ public class PrestamoController {
         if (usuario == null) {
             return "redirect:/usuario/login";
         }
+
         try {
+            // Se carga el prestamo antes de devolverlo para validar quien lo esta solicitando
+            Prestamo prestamo = prestamoService.buscarPorId(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Prestamo no encontrado"));
+
+            // Un usuario normal solo puede devolver prestamos propios; el admin puede devolver cualquiera
+            if (!esAdmin(session) && !prestamo.getUsuario().getId().equals(usuario.getId())) {
+                throw new IllegalStateException("No se puede devolver el prestamo de otro usuario");
+            }
+
             prestamoService.devolverPrestamo(id);
             redirectAttributes.addFlashAttribute("mensaje", "Devolucion registrada exitosamente");
-        } catch (IllegalStateException e) {
+
+        } catch (IllegalArgumentException | IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
+
         // Admin vuelve a activos, usuario vuelve a su historial
         if (esAdmin(session)) {
             return "redirect:/prestamo/activos";
