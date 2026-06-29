@@ -28,6 +28,7 @@
         <th>ISBN</th>
         <th>Categoria</th>
         <th>Disponibles</th>
+        <th th:if="${session.rol == 'ADMINISTRADOR'}">Estado</th>
         <th>Acciones</th>
     </tr>
     </thead>
@@ -38,12 +39,19 @@
         <td th:text="${libro.isbn}"></td>
         <td th:text="${libro.categoria}"></td>
         <td th:text="${libro.cantidadDisponible}"></td>
+        <td th:if="${session.rol == 'ADMINISTRADOR'}"
+            th:text="${libro.activo} ? 'Activo' : 'Inactivo'"></td>
         <td>
-            <!-- Solo admin ve editar y desactivar -->
+            <!-- El admin puede editar y cambiar el estado del libro. -->
             <div th:if="${session.rol == 'ADMINISTRADOR'}">
                 <a th:href="@{/libro/editar/{id}(id=${libro.id})}">Editar</a>
-                <form th:action="@{/libro/desactivar/{id}(id=${libro.id})}" method="post">
+                <form th:if="${libro.activo}"
+                      th:action="@{/libro/desactivar/{id}(id=${libro.id})}" method="post">
                     <button type="submit">Desactivar</button>
+                </form>
+                <form th:if="${!libro.activo}"
+                      th:action="@{/libro/activar/{id}(id=${libro.id})}" method="post">
+                    <button type="submit">Activar</button>
                 </form>
             </div>
             <!-- Usuario regular puede solicitar prestamo -->

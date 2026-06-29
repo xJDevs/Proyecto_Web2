@@ -22,6 +22,11 @@ public class LibroService {
         return libroRepository.findByActivoTrue();
     }
 
+    // Vista administrativa: incluye libros activos e inactivos para poder reactivarlos.
+    public List<Libro> listarTodos() {
+        return libroRepository.findAll();
+    }
+
     // Solo libros con unidades disponibles
     public List<Libro> listarDisponibles() {
         return libroRepository.findByActivoTrueAndCantidadDisponibleIsGreaterThan(0);
@@ -53,6 +58,11 @@ public class LibroService {
         existente.setAutor(datosNuevos.getAutor());
         existente.setIsbn(datosNuevos.getIsbn());
         existente.setCategoria(datosNuevos.getCategoria());
+
+        if (datosNuevos.getCantidadTotal() < existente.getCantidadDisponible()) {
+            throw new IllegalArgumentException("La cantidad total no puede ser menor que la cantidad disponible actual");
+        }
+
         existente.setCantidadTotal(datosNuevos.getCantidadTotal());
         return libroRepository.save(existente);
     }
@@ -62,6 +72,14 @@ public class LibroService {
         Libro libro = libroRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Libro no encontrado: " + id));
         libro.setActivo(false);
+        libroRepository.save(libro);
+    }
+
+    // Reactiva un libro desactivado desde la vista de administracion.
+    public void activar(Long id) {
+        Libro libro = libroRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Libro no encontrado: " + id));
+        libro.setActivo(true);
         libroRepository.save(libro);
     }
 
