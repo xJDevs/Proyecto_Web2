@@ -43,7 +43,7 @@ public class PrestamoRestController {
 
     // PATCH /api/prestamos/{id}/devolver - registra la devolucion
     @PatchMapping("/{id}/devolver")
-    public ResponseEntity<?> devolver(@PathVariable Long id) {
+    public ResponseEntity<?> devolver(@PathVariable("id") Long id) {
         try {
             Prestamo prestamo = prestamoService.devolverPrestamo(id);
             return ResponseEntity.ok(prestamo);
