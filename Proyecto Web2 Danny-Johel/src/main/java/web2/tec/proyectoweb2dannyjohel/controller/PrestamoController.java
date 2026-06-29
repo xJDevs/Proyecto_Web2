@@ -67,8 +67,8 @@ public class PrestamoController {
 
     // Procesa la solicitud de prestamo
     @PostMapping("/nuevo")
-    public String solicitar(@RequestParam Long libroId,
-                            @RequestParam LocalDate fechaDevolucionEsperada,
+    public String solicitar(@RequestParam("libroId") Long libroId,
+                            @RequestParam("fechaDevolucionEsperada") LocalDate fechaDevolucionEsperada,
                             HttpSession session,
                             RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioActual");
@@ -87,7 +87,7 @@ public class PrestamoController {
 
     // Procesa la devolucion de un prestamo
     @PostMapping("/devolver/{id}")
-    public String devolver(@PathVariable Long id,
+    public String devolver(@PathVariable("id") Long id,
                            HttpSession session,
                            RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioActual");

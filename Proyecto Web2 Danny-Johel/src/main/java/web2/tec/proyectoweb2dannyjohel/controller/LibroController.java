@@ -63,7 +63,7 @@ public class LibroController {
 
     // Formulario para editar libro - solo admin
     @GetMapping("/editar/{id}")
-    public String mostrarFormularioEditar(@PathVariable Long id,
+    public String mostrarFormularioEditar(@PathVariable("id") Long id,
                                           Model model,
                                           HttpSession session,
                                           RedirectAttributes redirectAttributes) {
@@ -84,7 +84,7 @@ public class LibroController {
 
     // Procesa la edicion de un libro - solo admin
     @PostMapping("/editar/{id}")
-    public String editar(@PathVariable Long id,
+    public String editar(@PathVariable("id") Long id,
                          @ModelAttribute Libro libro,
                          HttpSession session,
                          RedirectAttributes redirectAttributes) {
@@ -103,7 +103,7 @@ public class LibroController {
 
     // Desactiva un libro - solo admin
     @PostMapping("/desactivar/{id}")
-    public String desactivar(@PathVariable Long id,
+    public String desactivar(@PathVariable("id") Long id,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
         if (!esAdmin(session)) {

@@ -20,6 +20,7 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
 
     List<Libro> findByActivoTrue(); // libros visibles en catalogo
 
-    List<Libro> findByCantidadDisponibleIsGreaterThan(int cantidad);
+    List<Libro> findByActivoTrueAndCantidadDisponibleIsGreaterThan(int cantidad);
+    // queremos solamente libros activos y disponibles en el sistema
 
 }

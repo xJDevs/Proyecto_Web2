@@ -26,9 +26,9 @@ public class UsuarioController {
 
     // Procesa el formulario de registro.html
     @PostMapping("/registro")
-    public String registrar(@RequestParam String nombre,
-                            @RequestParam String correo,
-                            @RequestParam String password,
+    public String registrar(@RequestParam("nombre") String nombre,
+                            @RequestParam("correo") String correo,
+                            @RequestParam("password") String password,
                             RedirectAttributes redirectAttributes) {
         try {
             usuarioService.registrar(nombre, correo, password);
@@ -48,8 +48,8 @@ public class UsuarioController {
 
     // Procesa el formulario de login
     @PostMapping("/login")
-    public String login(@RequestParam String correo,
-                        @RequestParam String password,
+    public String login(@RequestParam("correo") String correo,
+                        @RequestParam("password") String password,
                         HttpSession session,
                         RedirectAttributes redirectAttributes) {
         return usuarioService.login(correo, password)

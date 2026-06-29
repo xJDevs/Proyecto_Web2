@@ -24,7 +24,7 @@ public class LibroService {
 
     // Solo libros con unidades disponibles
     public List<Libro> listarDisponibles() {
-        return libroRepository.findByCantidadDisponibleIsGreaterThan(0);
+        return libroRepository.findByActivoTrueAndCantidadDisponibleIsGreaterThan(0);
     }
 
     public List<Libro> listarPorCategoria(Categoria categoria) {
