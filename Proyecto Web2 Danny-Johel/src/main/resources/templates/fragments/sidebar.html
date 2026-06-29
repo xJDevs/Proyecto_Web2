@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside class="sidebar" th:fragment="sidebar">
+    <div class="sidebar__brand">
+        <h1 class="sidebar__title">Biblioteca</h1>
+        <p class="sidebar__subtitle">Sistema academico</p>
+    </div>
+
+    <!-- Navegacion comun para usuarios autenticados -->
+    <nav class="sidebar__nav">
+        <a class="sidebar__link" href="/libro/catalogo">Catalogo</a>
+
+        <div th:if="${session.rol == 'USUARIO'}">
+            <p class="sidebar__section">Prestamos</p>
+            <a class="sidebar__link" href="/prestamo/nuevo">Solicitar prestamo</a>
+            <a class="sidebar__link" href="/prestamo/mi-historial">Mi historial</a>
+        </div>
+
+        <div th:if="${session.rol == 'ADMINISTRADOR'}">
+            <p class="sidebar__section">Administracion</p>
+            <a class="sidebar__link" href="/libro/nuevo">Nuevo libro</a>
+            <a class="sidebar__link" href="/prestamo/activos">Prestamos activos</a>
+            <a class="sidebar__link" href="/prestamo/historial">Historial general</a>
+        </div>
+    </nav>
+
+    <!-- Salida visible y consistente en todas las pantallas internas -->
+    <div class="sidebar__logout">
+        <a class="sidebar__link" href="/usuario/logout">Cerrar sesion</a>
+    </div>
+</aside>
+
+</body>
+</html>

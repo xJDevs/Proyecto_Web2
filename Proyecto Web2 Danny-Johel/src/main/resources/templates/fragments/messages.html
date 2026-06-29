@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="messages">
+    <!-- Mensaje de operacion completada enviado desde RedirectAttributes -->
+    <div th:if="${mensaje}" class="alert alert--success">
+        <span th:text="${mensaje}"></span>
+    </div>
+
+    <!-- Mensaje de error de negocio o validacion enviado por el controlador -->
+    <div th:if="${error}" class="alert alert--error">
+        <span th:text="${error}"></span>
+    </div>
+</div>
+
+</body>
+</html>
