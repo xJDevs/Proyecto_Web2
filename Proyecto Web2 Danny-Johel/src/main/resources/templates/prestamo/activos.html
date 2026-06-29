@@ -3,46 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Prestamos Activos</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 
-<h2>Prestamos Activos</h2>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<div th:if="${mensaje}" style="color:green">
-    <p th:text="${mensaje}"></p>
+    <main class="app-main">
+        <!-- Vista administrativa para cerrar prestamos que aun estan activos -->
+        <header class="page-header">
+            <h1 class="page-title">Prestamos activos</h1>
+            <p class="page-subtitle">Revise los prestamos pendientes y registre devoluciones</p>
+        </header>
+
+        <div th:replace="~{fragments/messages :: messages}"></div>
+
+        <div class="actions page-actions">
+            <a class="button button--secondary" th:href="@{/prestamo/historial}">Ver historial completo</a>
+        </div>
+
+        <section class="table-wrap">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Libro</th>
+                    <th>Fecha prestamo</th>
+                    <th>Fecha devolucion esperada</th>
+                    <th>Accion</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="prestamo : ${prestamos}">
+                    <td th:text="${prestamo.usuario.nombre}"></td>
+                    <td th:text="${prestamo.libro.titulo}"></td>
+                    <td th:text="${prestamo.fechaPrestamo}"></td>
+                    <td th:text="${prestamo.fechaDevolucionEsperada}"></td>
+                    <td>
+                        <!-- El admin puede registrar la devolucion desde esta lista -->
+                        <form th:action="@{/prestamo/devolver/{id}(id=${prestamo.id})}"
+                              method="post">
+                            <button type="submit">Registrar devolucion</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
 </div>
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
-</div>
-
-<table border="1">
-    <thead>
-    <tr>
-        <th>Usuario</th>
-        <th>Libro</th>
-        <th>Fecha Prestamo</th>
-        <th>Fecha Devolucion Esperada</th>
-        <th>Accion</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="prestamo : ${prestamos}">
-        <td th:text="${prestamo.usuario.nombre}"></td>
-        <td th:text="${prestamo.libro.titulo}"></td>
-        <td th:text="${prestamo.fechaPrestamo}"></td>
-        <td th:text="${prestamo.fechaDevolucionEsperada}"></td>
-        <td>
-            <form th:action="@{/prestamo/devolver/{id}(id=${prestamo.id})}"
-                  method="post">
-                <button type="submit">Registrar Devolucion</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<a href="/prestamo/historial">Ver historial completo</a> |
-<a href="/libro/catalogo">Volver al catalogo</a>
 
 </body>
 </html>

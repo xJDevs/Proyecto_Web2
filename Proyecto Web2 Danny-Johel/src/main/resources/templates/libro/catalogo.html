@@ -3,67 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>Catalogo de Libros</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 
-<h2>Catalogo de Libros</h2>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<div th:if="${mensaje}" style="color:green">
-    <p th:text="${mensaje}"></p>
+    <main class="app-main">
+        <header class="page-header">
+            <h2 class="page-title">Catalogo de Libros</h2>
+            <p class="page-subtitle">Consulta disponibilidad y gestiona el inventario de la biblioteca</p>
+        </header>
+
+        <div th:replace="~{fragments/messages :: messages}"></div>
+
+        <!-- Accion principal para administradores sobre el catalogo -->
+        <div class="actions page-actions" th:if="${session.rol == 'ADMINISTRADOR'}">
+            <a class="button" href="/libro/nuevo">Agregar nuevo libro</a>
+        </div>
+
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Titulo</th>
+                    <th>Autor</th>
+                    <th>ISBN</th>
+                    <th>Categoria</th>
+                    <th>Disponibles</th>
+                    <th th:if="${session.rol == 'ADMINISTRADOR'}">Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="libro : ${libros}">
+                    <td th:text="${libro.titulo}"></td>
+                    <td th:text="${libro.autor}"></td>
+                    <td th:text="${libro.isbn}"></td>
+                    <td th:text="${libro.categoria}"></td>
+                    <td th:text="${libro.cantidadDisponible}"></td>
+                    <td th:if="${session.rol == 'ADMINISTRADOR'}">
+                        <span th:class="${libro.activo} ? 'badge badge--active' : 'badge badge--inactive'"
+                              th:text="${libro.activo} ? 'Activo' : 'Inactivo'"></span>
+                    </td>
+                    <td>
+                        <!-- Acciones administrativas sobre cada libro del inventario -->
+                        <div class="actions" th:if="${session.rol == 'ADMINISTRADOR'}">
+                            <a class="button button--secondary"
+                               th:href="@{/libro/editar/{id}(id=${libro.id})}">Editar</a>
+                            <form th:if="${libro.activo}"
+                                  th:action="@{/libro/desactivar/{id}(id=${libro.id})}" method="post">
+                                <button class="button--danger" type="submit">Desactivar</button>
+                            </form>
+                            <form th:if="${!libro.activo}"
+                                  th:action="@{/libro/activar/{id}(id=${libro.id})}" method="post">
+                                <button class="button--success" type="submit">Activar</button>
+                            </form>
+                        </div>
+
+                        <!-- Accion del usuario regular para iniciar una solicitud de prestamo -->
+                        <div class="actions" th:if="${session.rol == 'USUARIO'}">
+                            <a class="button" th:href="@{/prestamo/nuevo}">Solicitar prestamo</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </div>
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
-</div>
-
-<!-- Opciones de administrador -->
-<div th:if="${session.rol == 'ADMINISTRADOR'}">
-    <a href="/libro/nuevo">Agregar nuevo libro</a>
-</div>
-
-<table border="1">
-    <thead>
-    <tr>
-        <th>Titulo</th>
-        <th>Autor</th>
-        <th>ISBN</th>
-        <th>Categoria</th>
-        <th>Disponibles</th>
-        <th th:if="${session.rol == 'ADMINISTRADOR'}">Estado</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="libro : ${libros}">
-        <td th:text="${libro.titulo}"></td>
-        <td th:text="${libro.autor}"></td>
-        <td th:text="${libro.isbn}"></td>
-        <td th:text="${libro.categoria}"></td>
-        <td th:text="${libro.cantidadDisponible}"></td>
-        <td th:if="${session.rol == 'ADMINISTRADOR'}"
-            th:text="${libro.activo} ? 'Activo' : 'Inactivo'"></td>
-        <td>
-            <!-- El admin puede editar y cambiar el estado del libro. -->
-            <div th:if="${session.rol == 'ADMINISTRADOR'}">
-                <a th:href="@{/libro/editar/{id}(id=${libro.id})}">Editar</a>
-                <form th:if="${libro.activo}"
-                      th:action="@{/libro/desactivar/{id}(id=${libro.id})}" method="post">
-                    <button type="submit">Desactivar</button>
-                </form>
-                <form th:if="${!libro.activo}"
-                      th:action="@{/libro/activar/{id}(id=${libro.id})}" method="post">
-                    <button type="submit">Activar</button>
-                </form>
-            </div>
-            <!-- Usuario regular puede solicitar prestamo -->
-            <div th:if="${session.rol == 'USUARIO'}">
-                <a th:href="@{/prestamo/nuevo}">Solicitar prestamo</a>
-            </div>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<a href="/usuario/logout">Cerrar sesion</a>
 
 </body>
 </html>

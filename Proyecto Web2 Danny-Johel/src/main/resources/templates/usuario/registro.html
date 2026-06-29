@@ -3,32 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
-<body>
+<body class="auth-page">
 
-<h2>Crear Cuenta</h2>
+<main class="auth-card">
+    <!-- Formulario publico para crear usuarios nuevos con rol normal -->
+    <h1 class="auth-title">Crear cuenta</h1>
+    <p class="auth-subtitle">Complete los datos para solicitar prestamos en la biblioteca</p>
 
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
-</div>
+    <div th:replace="~{fragments/messages :: messages}"></div>
 
-<form th:action="@{/usuario/registro}" th:object="${usuario}" method="post">
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" required/><br/>
-    <small th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></small><br/>
+    <!-- th:object recibe el Usuario vacio que manda el GET y luego se llena con el POST -->
+    <form class="form-grid" th:action="@{/usuario/registro}" th:object="${usuario}" method="post">
+        <div class="form-field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" th:field="*{nombre}" required/>
+            <small class="field-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+        </div>
 
-    <label>Correo:</label>
-    <input type="email" th:field="*{correo}" required/><br/>
-    <small th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}" style="color:red"></small><br/>
+        <div class="form-field">
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" th:field="*{correo}" required/>
+            <small class="field-error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></small>
+        </div>
 
-    <label>Contrasena:</label>
-    <input type="password" th:field="*{password}" required/><br/>
-    <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></small><br/>
+        <div class="form-field">
+            <label for="password">Contrasena</label>
+            <input id="password" type="password" th:field="*{password}" required/>
+            <small class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+        </div>
 
-    <button type="submit">Registrarse</button>
-</form>
+        <button type="submit">Registrarse</button>
+    </form>
 
-<p>¿Ya tienes cuenta? <a href="/usuario/login">Inicia sesion aqui</a></p>
+    <p class="auth-footer">Ya tienes cuenta? <a th:href="@{/usuario/login}">Inicia sesion aqui</a></p>
+</main>
 
 </body>
 </html>

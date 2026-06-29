@@ -3,32 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Solicitar Prestamo</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 
-<h2>Solicitar Prestamo</h2>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
+    <main class="app-main">
+        <!-- Pantalla usada por usuarios para crear una solicitud de prestamo -->
+        <header class="page-header">
+            <h1 class="page-title">Solicitar prestamo</h1>
+            <p class="page-subtitle">Seleccione un libro disponible y la fecha esperada de devolucion</p>
+        </header>
+
+        <div th:replace="~{fragments/messages :: messages}"></div>
+
+        <section class="panel">
+            <!-- Los nombres libroId y fechaDevolucionEsperada deben coincidir con el controller -->
+            <form class="form-grid" th:action="@{/prestamo/nuevo}" method="post">
+
+                <div class="form-field">
+                    <label for="libroId">Libro</label>
+                    <select id="libroId" name="libroId" required>
+                        <option th:each="libro : ${libros}"
+                                th:value="${libro.id}"
+                                th:text="${libro.titulo} + ' - ' + ${libro.autor} + ' (' + ${libro.cantidadDisponible} + ' disponibles)'">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="fechaDevolucionEsperada">Fecha de devolucion esperada</label>
+                    <input id="fechaDevolucionEsperada" type="date" name="fechaDevolucionEsperada" required/>
+                </div>
+
+                <div class="actions">
+                    <button type="submit">Solicitar</button>
+                    <a class="button button--secondary" th:href="@{/libro/catalogo}">Cancelar</a>
+                </div>
+            </form>
+        </section>
+    </main>
 </div>
-
-<form action="/prestamo/nuevo" method="post">
-
-    <label>Libro:</label>
-    <select name="libroId" required>
-        <option th:each="libro : ${libros}"
-                th:value="${libro.id}"
-                th:text="${libro.titulo} + ' - ' + ${libro.autor} + ' (' + ${libro.cantidadDisponible} + ' disponibles)'">
-        </option>
-    </select><br/>
-
-    <label>Fecha de devolucion esperada:</label>
-    <input type="date" name="fechaDevolucionEsperada" required/><br/>
-
-    <button type="submit">Solicitar</button>
-</form>
-
-<a href="/libro/catalogo">Volver al catalogo</a>
 
 </body>
 </html>

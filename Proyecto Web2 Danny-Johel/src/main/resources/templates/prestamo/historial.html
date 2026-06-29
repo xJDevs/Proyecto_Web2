@@ -3,36 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Historial General</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 
-<h2>Historial General de Prestamos</h2>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>Usuario</th>
-        <th>Libro</th>
-        <th>Fecha Prestamo</th>
-        <th>Fecha Devolucion Esperada</th>
-        <th>Fecha Devolucion Real</th>
-        <th>Estado</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="prestamo : ${prestamos}">
-        <td th:text="${prestamo.usuario.nombre}"></td>
-        <td th:text="${prestamo.libro.titulo}"></td>
-        <td th:text="${prestamo.fechaPrestamo}"></td>
-        <td th:text="${prestamo.fechaDevolucionEsperada}"></td>
-        <td th:text="${prestamo.fechaDevolucionReal != null} ? ${prestamo.fechaDevolucionReal} : 'Pendiente'"></td>
-        <td th:text="${prestamo.estado}"></td>
-    </tr>
-    </tbody>
-</table>
+    <main class="app-main">
+        <!-- Historial general reservado para administradores -->
+        <header class="page-header">
+            <h1 class="page-title">Historial general de prestamos</h1>
+            <p class="page-subtitle">Consulta completa de prestamos activos y devueltos</p>
+        </header>
 
-<a href="/prestamo/activos">Ver prestamos activos</a> |
-<a href="/libro/catalogo">Volver al catalogo</a>
+        <div class="actions page-actions">
+            <a class="button button--secondary" th:href="@{/prestamo/activos}">Ver prestamos activos</a>
+        </div>
+
+        <section class="table-wrap">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Libro</th>
+                    <th>Fecha prestamo</th>
+                    <th>Fecha devolucion esperada</th>
+                    <th>Fecha devolucion real</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="prestamo : ${prestamos}">
+                    <td th:text="${prestamo.usuario.nombre}"></td>
+                    <td th:text="${prestamo.libro.titulo}"></td>
+                    <td th:text="${prestamo.fechaPrestamo}"></td>
+                    <td th:text="${prestamo.fechaDevolucionEsperada}"></td>
+                    <td th:text="${prestamo.fechaDevolucionReal != null} ? ${prestamo.fechaDevolucionReal} : 'Pendiente'"></td>
+                    <td>
+                        <span th:class="${prestamo.estado.name() == 'ACTIVO'} ? 'badge badge--active' : 'badge badge--returned'"
+                              th:text="${prestamo.estado}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
 
 </body>
 </html>

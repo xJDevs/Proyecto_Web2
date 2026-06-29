@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Iniciar Sesion</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
-<body>
+<body class="auth-page">
 
-<h2>Iniciar Sesion</h2>
+<main class="auth-card">
+    <!-- Pantalla publica para iniciar sesion con correo y contrasena -->
+    <h1 class="auth-title">Iniciar sesion</h1>
+    <p class="auth-subtitle">Ingrese con las credenciales registradas en el sistema</p>
 
-<!-- Muestra errores o mensajes enviados por el controlador -->
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
-</div>
-<div th:if="${mensaje}" style="color:green">
-    <p th:text="${mensaje}"></p>
-</div>
+    <div th:replace="~{fragments/messages :: messages}"></div>
 
-<form action="/usuario/login" method="post">
-    <label>Correo:</label>
-    <input type="email" name="correo" required/><br/>
+    <!-- Los nombres correo y password deben coincidir con los @RequestParam del controller -->
+    <form class="form-grid" th:action="@{/usuario/login}" method="post">
+        <div class="form-field">
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" name="correo" required/>
+        </div>
 
-    <label>Contrasena:</label>
-    <input type="password" name="password" required/><br/>
+        <div class="form-field">
+            <label for="password">Contrasena</label>
+            <input id="password" type="password" name="password" required/>
+        </div>
 
-    <button type="submit">Ingresar</button>
-</form>
+        <button type="submit">Ingresar</button>
+    </form>
 
-<p>¿No tienes cuenta? <a href="/usuario/registro">Registrate aqui</a></p>
+    <p class="auth-footer">No tienes cuenta? <a th:href="@{/usuario/registro}">Registrate aqui</a></p>
+</main>
 
 </body>
 </html>

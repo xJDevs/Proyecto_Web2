@@ -3,49 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Mi Historial</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 
-<h2>Mi Historial de Prestamos</h2>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<div th:if="${mensaje}" style="color:green">
-    <p th:text="${mensaje}"></p>
+    <main class="app-main">
+        <!-- Historial personal del usuario logueado -->
+        <header class="page-header">
+            <h1 class="page-title">Mi historial de prestamos</h1>
+            <p class="page-subtitle">Consulte sus prestamos y registre devoluciones pendientes</p>
+        </header>
+
+        <div th:replace="~{fragments/messages :: messages}"></div>
+
+        <section class="table-wrap">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Libro</th>
+                    <th>Fecha prestamo</th>
+                    <th>Fecha devolucion esperada</th>
+                    <th>Fecha devolucion real</th>
+                    <th>Estado</th>
+                    <th>Accion</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="prestamo : ${prestamos}">
+                    <td th:text="${prestamo.libro.titulo}"></td>
+                    <td th:text="${prestamo.fechaPrestamo}"></td>
+                    <td th:text="${prestamo.fechaDevolucionEsperada}"></td>
+                    <td th:text="${prestamo.fechaDevolucionReal != null} ? ${prestamo.fechaDevolucionReal} : 'Pendiente'"></td>
+                    <td>
+                        <span th:class="${prestamo.estado.name() == 'ACTIVO'} ? 'badge badge--active' : 'badge badge--returned'"
+                              th:text="${prestamo.estado}"></span>
+                    </td>
+                    <td>
+                        <!-- Solo se permite devolver prestamos que siguen activos -->
+                        <form th:if="${prestamo.estado.name() == 'ACTIVO'}"
+                              th:action="@{/prestamo/devolver/{id}(id=${prestamo.id})}"
+                              method="post">
+                            <button type="submit">Devolver</button>
+                        </form>
+                        <span class="badge badge--returned" th:if="${prestamo.estado.name() != 'ACTIVO'}">Devuelto</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
 </div>
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
-</div>
-
-<table border="1">
-    <thead>
-    <tr>
-        <th>Libro</th>
-        <th>Fecha Prestamo</th>
-        <th>Fecha Devolucion Esperada</th>
-        <th>Fecha Devolucion Real</th>
-        <th>Estado</th>
-        <th>Accion</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="prestamo : ${prestamos}">
-        <td th:text="${prestamo.libro.titulo}"></td>
-        <td th:text="${prestamo.fechaPrestamo}"></td>
-        <td th:text="${prestamo.fechaDevolucionEsperada}"></td>
-        <td th:text="${prestamo.fechaDevolucionReal != null} ? ${prestamo.fechaDevolucionReal} : 'Pendiente'"></td>
-        <td th:text="${prestamo.estado}"></td>
-        <td>
-            <form th:if="${prestamo.estado.name() == 'ACTIVO'}"
-                  th:action="@{/prestamo/devolver/{id}(id=${prestamo.id})}"
-                  method="post">
-                <button type="submit">Devolver</button>
-            </form>
-            <span th:if="${prestamo.estado.name() != 'ACTIVO'}">Devuelto</span>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<a href="/libro/catalogo">Volver al catalogo</a>
 
 </body>
 </html>

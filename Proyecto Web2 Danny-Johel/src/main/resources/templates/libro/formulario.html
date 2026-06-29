@@ -3,43 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Formulario Libro</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 
-<h2 th:text="${libro.id != null} ? 'Editar Libro' : 'Nuevo Libro'"></h2>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<div th:if="${error}" style="color:red">
-    <p th:text="${error}"></p>
+    <main class="app-main">
+        <!-- Encabezado que cambia segun si se crea o edita un libro -->
+        <header class="page-header">
+            <h1 class="page-title" th:text="${libro.id != null} ? 'Editar libro' : 'Nuevo libro'"></h1>
+            <p class="page-subtitle">Complete los datos bibliograficos y la cantidad administrable del inventario</p>
+        </header>
+
+        <div th:replace="~{fragments/messages :: messages}"></div>
+
+        <section class="panel">
+            <!-- El action se decide con el id: si existe actualiza, si no existe crea -->
+            <form class="form-grid"
+                  th:action="${libro.id != null} ? @{/libro/editar/{id}(id=${libro.id})} : @{/libro/nuevo}"
+                  method="post">
+
+                <div class="form-field">
+                    <label for="titulo">Titulo</label>
+                    <input id="titulo" type="text" name="titulo" th:value="${libro.titulo}" required/>
+                </div>
+
+                <div class="form-field">
+                    <label for="autor">Autor</label>
+                    <input id="autor" type="text" name="autor" th:value="${libro.autor}" required/>
+                </div>
+
+                <div class="form-field">
+                    <label for="isbn">ISBN</label>
+                    <input id="isbn" type="text" name="isbn" th:value="${libro.isbn}" required/>
+                </div>
+
+                <div class="form-field">
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" name="categoria">
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat}"
+                                th:text="${cat}"
+                                th:selected="${cat == libro.categoria}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="cantidadTotal">Cantidad total</label>
+                    <input id="cantidadTotal" type="number" name="cantidadTotal" th:value="${libro.cantidadTotal}" min="1" required/>
+                </div>
+
+                <div class="actions">
+                    <button type="submit">Guardar</button>
+                    <a class="button button--secondary" th:href="@{/libro/catalogo}">Cancelar</a>
+                </div>
+            </form>
+        </section>
+    </main>
 </div>
-
-<form th:action="${libro.id != null} ? @{/libro/editar/{id}(id=${libro.id})} : @{/libro/nuevo}"
-      method="post">
-
-    <label>Titulo:</label>
-    <input type="text" name="titulo" th:value="${libro.titulo}" required/><br/>
-
-    <label>Autor:</label>
-    <input type="text" name="autor" th:value="${libro.autor}" required/><br/>
-
-    <label>ISBN:</label>
-    <input type="text" name="isbn" th:value="${libro.isbn}" required/><br/>
-
-    <label>Categoria:</label>
-    <select name="categoria">
-        <option th:each="cat : ${categorias}"
-                th:value="${cat}"
-                th:text="${cat}"
-                th:selected="${cat == libro.categoria}">
-        </option>
-    </select><br/>
-
-    <label>Cantidad Total:</label>
-    <input type="number" name="cantidadTotal" th:value="${libro.cantidadTotal}" min="1" required/><br/>
-
-    <button type="submit">Guardar</button>
-</form>
-
-<a href="/libro/catalogo">Volver al catalogo</a>
 
 </body>
 </html>
